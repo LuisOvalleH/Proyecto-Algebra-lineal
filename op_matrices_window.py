@@ -37,39 +37,77 @@ class Op_matrices_window(QWidget):
 
         # option area
         option_layout = QVBoxLayout()
-        rows_layout = QHBoxLayout()
-        columns_layout = QHBoxLayout()
+        dimensions_layout = QHBoxLayout()
+        matrix_1 = QVBoxLayout()
+        rows_layout_1 = QHBoxLayout()
+        columns_layout_1 = QHBoxLayout()
+
+        matrix_2 = QVBoxLayout()
+        rows_layout_2 = QHBoxLayout()
+        columns_layout_2 = QHBoxLayout()
+
+        self.matrix_1_text = QLabel("Matriz 1: ")
+        self.matrix_1_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        matrix_1.addWidget(self.matrix_1_text)
 
         self.rows_label = QLabel("Ingresar numero de filas:")
         self.rows_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-        rows_layout.addWidget(self.rows_label)
+        rows_layout_1.addWidget(self.rows_label)
 
         self.input_rows = QLineEdit()
         self.input_rows.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
-        rows_layout.addWidget(self.input_rows)
+        rows_layout_1.addWidget(self.input_rows)
 
         self.columns_label = QLabel("Ingresar numero de Columnas:")
         self.columns_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-        columns_layout.addWidget(self.columns_label)
+        columns_layout_1.addWidget(self.columns_label)
 
         self.input_columns = QLineEdit()
         self.input_columns.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
-        columns_layout.addWidget(self.input_columns)
+        columns_layout_1.addWidget(self.input_columns)
 
-        self.confirm_button = QPushButton("Confirmar")
-        self.confirm_button.setStyleSheet(
-            "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
-        self.confirm_button.setFont(QFont("Arial", 11))
+        self.matrix_2_text = QLabel("Matriz 2: ")
+        self.matrix_2_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        matrix_2.addWidget(self.matrix_2_text)
 
-        option_layout.addLayout(rows_layout)
-        option_layout.addLayout(columns_layout)
-        option_layout.addWidget(self.confirm_button)
+        self.rows_label_2 = QLabel("Ingresar numero de filas:")
+        self.rows_label_2.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        rows_layout_2.addWidget(self.rows_label_2)
+
+        self.input_rows = QLineEdit()
+        self.input_rows.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
+        rows_layout_2.addWidget(self.input_rows)
+
+        self.columns_label = QLabel("Ingresar numero de Columnas:")
+        self.columns_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        columns_layout_2.addWidget(self.columns_label)
 
         self.matrix_1_text = QLabel("Matriz 1: ")
         self.matrix_1_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
 
         self.matrix_2_text = QLabel("Matriz 2: ")
         self.matrix_2_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+
+        self.input_columns = QLineEdit()
+        self.input_columns.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
+        columns_layout_2.addWidget(self.input_columns)
+
+
+
+        self.confirm_button = QPushButton("Confirmar")
+        self.confirm_button.setStyleSheet(
+            "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
+        self.confirm_button.setFont(QFont("Arial", 11))
+
+        matrix_1.addLayout(rows_layout_1)
+        matrix_1.addLayout(columns_layout_1)
+        dimensions_layout.addLayout(matrix_1)
+
+        matrix_2.addLayout(rows_layout_2)
+        matrix_2.addLayout(columns_layout_2)
+        dimensions_layout.addLayout(matrix_2)
+        option_layout.addLayout(dimensions_layout)
+        option_layout.addWidget(self.confirm_button)
 
         self.sum_button = QPushButton("Sumar")
         self.sum_button.setStyleSheet(
