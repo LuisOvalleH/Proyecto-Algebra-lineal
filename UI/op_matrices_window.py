@@ -1,29 +1,26 @@
 import sys
-
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QLineEdit
-
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit
+from operaciones_matrices.sumar import sumar_matrices  # Asegúrate de que la ruta sea correcta
 
 class Op_matrices_window(QWidget):
     window_closed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Selcción de proporción")
+        self.setWindowTitle("Selección de proporción")
         self.setGeometry(550, 210, 450, 400)
 
         # establecer logo de la ventana
-
         icono = QIcon("calculadora.png")
         self.setWindowIcon(icono)
 
         layout = QVBoxLayout()
 
         encabezado_layout = QHBoxLayout()
-
         logo_label = QLabel()
-        pixmap = QPixmap("Calculadora.png").scaled(65, 65)
+        pixmap = QPixmap("calculadora.png").scaled(65, 65)
         logo_label.setPixmap(pixmap)
         encabezado_layout.addWidget(logo_label)
 
@@ -82,12 +79,6 @@ class Op_matrices_window(QWidget):
         self.columns_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         columns_layout_2.addWidget(self.columns_label)
 
-        self.matrix_1_text = QLabel("Matriz 1: ")
-        self.matrix_1_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-
-        self.matrix_2_text = QLabel("Matriz 2: ")
-        self.matrix_2_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-
         self.input_columns = QLineEdit()
         self.input_columns.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
         columns_layout_2.addWidget(self.input_columns)
@@ -96,8 +87,7 @@ class Op_matrices_window(QWidget):
         self.confirm_button.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.confirm_button.setFont(QFont("Arial", 11))
-        self.confirm_button.clicked.connect(lambda: self.init_op_sistem(layout))
-
+        self.confirm_button.clicked.connect(self.init_op_sistem)
 
         matrix_1.addLayout(rows_layout_1)
         matrix_1.addLayout(columns_layout_1)
@@ -109,9 +99,9 @@ class Op_matrices_window(QWidget):
         option_layout.addLayout(dimensions_layout)
         option_layout.addWidget(self.confirm_button)
 
-
         layout.addLayout(encabezado_layout)
         layout.addLayout(option_layout)
+
         self.setLayout(layout)
 
     def create_matrix_input_1(self, layout: QVBoxLayout):
@@ -152,8 +142,8 @@ class Op_matrices_window(QWidget):
 
         layout.addLayout(matrix_layout)
 
-    def init_op_sistem(self, layout: QVBoxLayout):
-
+    def init_op_sistem(self):
+        layout = self.layout()
         self.setGeometry(550, 90, 450, 400)
 
         self.create_matrix_input_1(layout)
@@ -163,32 +153,45 @@ class Op_matrices_window(QWidget):
         self.sum_button.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.sum_button.setFont(QFont("Arial", 11))
+        self.sum_button.clicked.connect(self.sumar_matrices)
 
-        self.rest_button = QPushButton("Restar")
-        self.rest_button.setStyleSheet(
-            "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
-        self.rest_button.setFont(QFont("Arial", 11))
-
-        self.multiplicacion_button = QPushButton("Multiplicar")
-        self.multiplicacion_button.setStyleSheet(
-            "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
-        self.multiplicacion_button.setFont(QFont("Arial", 11))
-
-        self.product_button = QPushButton("Producto punto a punto")
-        self.product_button.setStyleSheet(
-            "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
-        self.product_button.setFont(QFont("Arial", 11))
-
-        layout.addWidget(self.matrix_2_text)
         layout.addWidget(self.sum_button)
-        layout.addWidget(self.rest_button)
-        layout.addWidget(self.multiplicacion_button)
-        layout.addWidget(self.product_button)
+
+    def sumar_matrices(self):
+        # Obtener las matrices ingresadas por el usuario
+        matrix_1 = self.get_matrix_from_input(self.input_rows_1, self.input_columns_1)
+        matrix_2 = self.get_matrix_from_input(self.input_rows, self.input_columns)
+
+        try:
+            # Sumar las matrices utilizando la función importada
+            resultado = sumar_matrices(matrix_1, matrix_2)
+            self.mostrar_resultado(resultado)
+        except ValueError as e:
+            self.mostrar_error(str(e))
+
+    def get_matrix_from_input(self, input_rows, input_columns):
+        rows = int(input_rows.text())
+        columns = int(input_columns.text())
+        matrix = []
+        for i in range(rows):
+            row = []
+            for j in range(columns):
+                value = self.input_row.text()
+
+                if value.strip():
+                    row.append(float(value))
+            matrix.append(row)
+        return matrix
+
+    def mostrar_resultado(self, resultado):
+        print("Resultado:", resultado)  # Implementa cómo deseas mostrar el resultado
+
+    def mostrar_error(self, mensaje):
+        print("Error:", mensaje)  # Implementa cómo deseas mostrar el error
 
     def closeEvent(self, event):
         self.window_closed.emit()
         super().closeEvent(event)
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
