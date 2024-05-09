@@ -3,6 +3,7 @@ import sys
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+from op_matrices_window import Op_matrices_window
 
 
 class Main_window(QWidget):
@@ -81,6 +82,17 @@ class Main_window(QWidget):
         main_layout.addLayout(encabezado_layout)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
+
+    def reopen_main_menu(self):
+        self.show()
+
+    def op_matrices_funcion(self):
+        self.hide()
+        self.op_matrices_window = Op_matrices_window()
+        self.op_matrices_window.show()
+        self.op_matrices_window.window_closed.connect(self.reopen_main_menu)
+
+
 
 
 if __name__ == "__main__":
