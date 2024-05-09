@@ -185,6 +185,10 @@ class Op_matrices_window(QWidget):
         layout.addWidget(self.multiplicacion_button)
         layout.addWidget(self.product_button)
 
+    def closeEvent(self, event):
+        self.window_closed.emit()
+        super().closeEvent(event)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -5,6 +5,7 @@ from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from op_matrices_window import Op_matrices_window
 
+#limitar creacion a 6*6
 
 class Main_window(QWidget):
     window_closed = pyqtSignal()
@@ -35,12 +36,31 @@ class Main_window(QWidget):
         encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
 
+
+
+        main_layout.addLayout(encabezado_layout)
+        self.button_main(main_layout)
+
+
+        self.setLayout(main_layout)
+
+    def reopen_main_menu(self):
+        self.show()
+
+    def op_matrices_funcion(self):
+        self.hide()
+        self.op_matrices_window = Op_matrices_window()
+        self.op_matrices_window.show()
+        self.op_matrices_window.window_closed.connect(self.reopen_main_menu)
+
+    def button_main(self, main_layout):
         button_layout = QVBoxLayout()
 
         self.op_matrices = QPushButton("Operaciones con matrices")
         self.op_matrices.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.op_matrices.setFont(QFont("Arial", 11))
+        self.op_matrices.clicked.connect(self.op_matrices_funcion)
         button_layout.addWidget(self.op_matrices)
 
         self.matriz_inversa = QPushButton("Matriz Inversa")
@@ -79,18 +99,8 @@ class Main_window(QWidget):
         self.op_vectores.setFont(QFont("Arial", 11))
         button_layout.addWidget(self.op_vectores)
 
-        main_layout.addLayout(encabezado_layout)
+
         main_layout.addLayout(button_layout)
-        self.setLayout(main_layout)
-
-    def reopen_main_menu(self):
-        self.show()
-
-    def op_matrices_funcion(self):
-        self.hide()
-        self.op_matrices_window = Op_matrices_window()
-        self.op_matrices_window.show()
-        self.op_matrices_window.window_closed.connect(self.reopen_main_menu)
 
 
 
