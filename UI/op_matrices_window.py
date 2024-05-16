@@ -168,25 +168,10 @@ class Op_matrices_window(QWidget):
         prefix_2 = "input_row_2"
         matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
         matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
-        result = "Proceso de la suma:\n"
-        matrix_result = Matrix(self.rows_1, self.columns_1)
-
-        for i in range(self.rows_1):
-            for j in range(self.columns_1):
-                value_1 = matrix_1.value()
-                value_2 = matrix_2.value()
-                sum_value = value_1 + value_2
-                result += f"{value_1} + {value_2} = {sum_value}\n"
-                matrix_result.insert(sum_value)
-
-        result += "\nResultado de la suma: "
-
-        result += f"\n {matrix_result} "
-        matrix_1.matrix_sum = matrix_result
+        result = matrix_1.sum(matrix_2)
         self.result_sum_window = Result_window(result)
         self.result_sum_window.show()
-        print(result)
-        print(matrix_1.matrix_sum)
+
 
     def get_matrix_input_text(self, rows, columns, prefix):
         matrix = Matrix(rows, columns)

@@ -21,18 +21,23 @@ class Matrix():
     def sum(self, Matrix_2):
         if self.rows != Matrix_2.rows or self.columns != Matrix_2.columns:
             raise ValueError("Las matrices deben tener las mismas dimensiones para restarse")
-
-        self.matrix_sum = Matrix(self.rows, self.columns)  # Crear una matriz para almacenar el resultado
-        result_str = "Proceso de resta:\n"
+        result = "Proceso de la suma:\n"
+        matrix_result = Matrix(self.rows, self.columns)
 
         for i in range(self.rows):
             for j in range(self.columns):
-                # Restar los elementos correspondientes de las dos matrices
-                subtract_value = self.get_value(i, j) + Matrix_2.get_value(i, j)
-                self.matrix_sum.insert(str(subtract_value))  # Insertar el valor en la matriz de resultado
-                result_str += f"{self.get_value(i, j)} + {Matrix_2.get_value(i, j)} = {subtract_value}\n"
+                value_1 = self.value()
+                value_2 = Matrix_2.value()
+                sum_value = value_1 + value_2
+                result += f"{value_1} + {value_2} = {sum_value}\n"
+                matrix_result.insert(sum_value)
 
-        return result_str
+        result += "\nResultado de la suma: "
+
+        result += f"\n {matrix_result} "
+        self.matrix_sum = matrix_result
+
+        return result
 
     def get_value(self, row, column):
         index = row * self.columns + column
