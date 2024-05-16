@@ -17,7 +17,7 @@ class Result_window(QWidget):
 
         layout = QVBoxLayout()
 
-        title_label = QLabel("Proceso y resultado suma")
+        title_label = QLabel("Proceso y resultado")
         title_label.setFont(QFont("Arial", 15, QFont.Weight.Bold))
         layout.addWidget(title_label)
 

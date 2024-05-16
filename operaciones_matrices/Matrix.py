@@ -20,7 +20,7 @@ class Matrix():
 
     def sum(self, Matrix_2):
         if self.rows != Matrix_2.rows or self.columns != Matrix_2.columns:
-            raise ValueError("Las matrices deben tener las mismas dimensiones para restarse")
+            raise ValueError("Las matrices deben tener las mismas dimensiones para sumarse")
         result = "Proceso de la suma:\n"
         matrix_result = Matrix(self.rows, self.columns)
 
@@ -49,18 +49,23 @@ class Matrix():
     def subtract(self, Matrix_2):
         if self.rows != Matrix_2.rows or self.columns != Matrix_2.columns:
             raise ValueError("Las matrices deben tener las mismas dimensiones para restarse")
-
-        self.matrix_subtract = Matrix(self.rows, self.columns)  # Crear una matriz para almacenar el resultado
-        result_str = "Proceso de resta:\n"
+        result = "Proceso de la resta:\n"
+        matrix_result = Matrix(self.rows, self.columns)
 
         for i in range(self.rows):
             for j in range(self.columns):
-                # Restar los elementos correspondientes de las dos matrices
-                subtract_value = self.get_value(i, j) - Matrix_2.get_value(i, j)
-                self.matrix_subtract.insert(str(subtract_value))  # Insertar el valor en la matriz de resultado
-                result_str += f"{self.get_value(i, j)} - {Matrix_2.get_value(i, j)} = {subtract_value}\n"
+                value_1 = self.value()
+                value_2 = Matrix_2.value()
+                rest_value = value_1 - value_2
+                result += f"{value_1} - {value_2} = {rest_value}\n"
+                matrix_result.insert(rest_value)
 
-        return result_str
+        result += "\nResultado de la resta: "
+
+        result += f"\n {matrix_result} "
+        self.matrix_sum = matrix_result
+
+        return result
 
     def multiply(self, Matrix_2):
         if self.columns != Matrix_2.rows:
