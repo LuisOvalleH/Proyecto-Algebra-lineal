@@ -1,8 +1,9 @@
 import sys
-
+from result_window import Result_window
+from operaciones_matrices.Matrix import Matrix
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QLineEdit
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,  QLineEdit
 
 
 class Op_matrices_window(QWidget):
@@ -10,7 +11,11 @@ class Op_matrices_window(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Selcción de proporción")
+        self.rows_1 = 0
+        self.rows_2 = 0
+        self.columns_1 = 0
+        self.columns_2 = 0
+        self.setWindowTitle("Operaciones con matrices")
         self.setGeometry(550, 210, 450, 400)
 
         # establecer logo de la ventana
@@ -74,19 +79,15 @@ class Op_matrices_window(QWidget):
         self.rows_label_2.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         rows_layout_2.addWidget(self.rows_label_2)
 
-        self.input_rows = QLineEdit()
-        self.input_rows.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
-        rows_layout_2.addWidget(self.input_rows)
+        self.input_rows_2 = QLineEdit()
+        self.input_rows_2.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
+        rows_layout_2.addWidget(self.input_rows_2)
 
-        self.columns_label = QLabel("Ingresar numero de Columnas:")
-        self.columns_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-        columns_layout_2.addWidget(self.columns_label)
+        self.columns_label_2 = QLabel("Ingresar numero de Columnas:")
+        self.columns_label_2.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        columns_layout_2.addWidget(self.columns_label_2)
 
-        self.matrix_1_text = QLabel("Matriz 1: ")
-        self.matrix_1_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
 
-        self.matrix_2_text = QLabel("Matriz 2: ")
-        self.matrix_2_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
 
         self.input_columns = QLineEdit()
         self.input_columns.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
@@ -118,16 +119,20 @@ class Op_matrices_window(QWidget):
         matrix_layout = QVBoxLayout()
         rows = int(self.input_rows_1.text())
         columns = int(self.input_columns_1.text())
+        self.rows_1 = int(self.input_rows_1.text())
+        self.columns_1 = int(self.input_columns_1.text())
         self.matrix_1_ = QLabel("Matriz 1: ")
         self.matrix_1_.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         matrix_layout.addWidget(self.matrix_1_)
 
-        for _ in range(rows):
+        for row_index in range(rows):
             row_layout = QHBoxLayout()
-            for _ in range(columns):
-                self.input_row = QLineEdit()
-                self.input_row.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
-                row_layout.addWidget(self.input_row)
+            for column_index in range(columns):
+                self.input_row_1_ = QLineEdit()
+                self.input_row_1_.setObjectName(f"input_row_1_{row_index}_{column_index}")  # Asignar un nombre único
+                self.input_row_1_.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
+                row_layout.addWidget(self.input_row_1_)
+                setattr(self, f"input_row_1_{row_index}_{column_index}", self.input_row_1_)  # Establecer el atributo dinámico
 
             matrix_layout.addLayout(row_layout)
 
@@ -135,24 +140,78 @@ class Op_matrices_window(QWidget):
 
     def create_matrix_input_2(self, layout: QVBoxLayout):
         matrix_layout = QVBoxLayout()
-        rows = int(self.input_rows.text())
+        rows = int(self.input_rows_2.text())
+        self.rows_2 = int(self.input_rows_2.text())
+        self.columns_2 = int(self.input_columns.text())
         columns = int(self.input_columns.text())
+
         self.matrix_2_ = QLabel("Matriz 2: ")
         self.matrix_2_.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         matrix_layout.addWidget(self.matrix_2_)
 
-        for _ in range(rows):
+        for row_index in range(rows):
             row_layout = QHBoxLayout()
-            for _ in range(columns):
+            for column_index in range(columns):
                 self.input_row = QLineEdit()
+                self.input_row.setObjectName(f"self.input_row_2_{row_index}_{column_index}")  # Asignar un nombre único
+                print(f"input_row_2_{row_index}_{column_index}")
                 self.input_row.setStyleSheet("height: 23px; border-radius: 10px; border: 2px  white;")
                 row_layout.addWidget(self.input_row)
+                setattr(self, f"input_row_2_{row_index}_{column_index}", self.input_row)  # Establecer el atributo dinámico
 
             matrix_layout.addLayout(row_layout)
 
         layout.addLayout(matrix_layout)
 
+    def sum_button_action(self):
+        prefix_1 = "input_row_1"
+        prefix_2 = "input_row_2"
+        matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
+        matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
+        result = "Proceso de la suma:\n"
+        matrix_result = Matrix(self.rows_1, self.columns_1)
+
+        for i in range(self.rows_1):
+            for j in range(self.columns_1):
+                value_1 = matrix_1.value()
+                value_2 = matrix_2.value()
+                sum_value = value_1 + value_2
+                result += f"{value_1} + {value_2} = {sum_value}\n"
+                matrix_result.insert(sum_value)
+
+        result += "\nResultado de la suma: "
+
+        result += f"\n {matrix_result} "
+        matrix_1.matrix_sum = matrix_result
+        self.result_sum_window = Result_window(result)
+        self.result_sum_window.show()
+        print(result)
+        print(matrix_1.matrix_sum)
+
+    def get_matrix_input_text(self, rows, columns, prefix):
+        matrix = Matrix(rows, columns)
+        for row_index in range(rows):
+            for column_index in range(columns):
+                input_row = getattr(self, f"{prefix}_{row_index}_{column_index}")
+                matrix.matrix.append(input_row.text())
+        return matrix
+
+    def delete_create_matrix_button(self):
+        self.matrix_1_text.deleteLater()
+        self.rows_label.deleteLater()
+        self.input_rows_1.deleteLater()
+        self.columns_label.deleteLater()
+        self.input_columns_1.deleteLater()
+        self.matrix_2_text.deleteLater()
+        self.rows_label_2.deleteLater()
+        self.input_rows_2.deleteLater()
+        self.columns_label_2.deleteLater()
+        self.input_columns.deleteLater()
+        self.confirm_button.deleteLater()
+
     def init_op_sistem(self, layout: QVBoxLayout):
+
+        self.delete_create_matrix_button()
 
         self.setGeometry(550, 90, 450, 400)
 
@@ -162,6 +221,7 @@ class Op_matrices_window(QWidget):
         self.sum_button = QPushButton("Sumar")
         self.sum_button.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
+        self.sum_button.clicked.connect(self.sum_button_action)
         self.sum_button.setFont(QFont("Arial", 11))
 
         self.rest_button = QPushButton("Restar")

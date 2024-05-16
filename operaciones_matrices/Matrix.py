@@ -1,6 +1,6 @@
 from fractions import Fraction
 
-from List import List
+from UI.List import List
 
 
 class Matrix():

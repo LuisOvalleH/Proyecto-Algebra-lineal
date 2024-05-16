@@ -13,7 +13,6 @@ class List(Generic[T]):
         self.__size = 0
         self.__current: Node[T] | None = None
         self.tipo_data = None
-
     @property
     def head(self):
         return self.__head
