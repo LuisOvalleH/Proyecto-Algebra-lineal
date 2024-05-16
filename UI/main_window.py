@@ -3,8 +3,7 @@ import sys
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from UI.op_matrices_window import Op_matrices_window
-
+from op_matrices_window import Op_matrices_window
 
 #limitar creacion a 6*6
 
@@ -25,7 +24,7 @@ class Main_window(QWidget):
         encabezado_layout = QHBoxLayout()
 
         logo_label = QLabel()
-        pixmap = QPixmap("calculadora.png").scaled(65, 65)
+        pixmap = QPixmap("Calculadora.png").scaled(65, 65)
         logo_label.setPixmap(pixmap)
         encabezado_layout.addWidget(logo_label)
 
@@ -103,6 +102,14 @@ class Main_window(QWidget):
 
         main_layout.addLayout(button_layout)
 
+
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Main_window()
+    window.show()
+    sys.exit(app.exec())
 
 
 
