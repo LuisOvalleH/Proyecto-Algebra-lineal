@@ -1,7 +1,7 @@
 
 from typing import TypeVar, Generic
 
-from node import Node
+from operaciones_matrices.node import Node
 
 T = TypeVar('T')
 

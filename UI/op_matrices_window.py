@@ -181,6 +181,16 @@ class Op_matrices_window(QWidget):
         self.result_sum_window = Result_window(result)
         self.result_sum_window.show()
 
+    def multiply_button_action(self):
+        prefix_1 = "input_row_1"
+        prefix_2 = "input_row_2"
+        matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
+        matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
+        result = matrix_1.multiply(matrix_2)
+        self.result_sum_window = Result_window(result)
+        self.result_sum_window.show()
+
+
 
     def get_matrix_input_text(self, rows, columns, prefix):
         matrix = Matrix(rows, columns)
@@ -227,6 +237,7 @@ class Op_matrices_window(QWidget):
         self.multiplicacion_button = QPushButton("Multiplicar")
         self.multiplicacion_button.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
+        self.multiplicacion_button.clicked.connect(self.multiply_button_action)
         self.multiplicacion_button.setFont(QFont("Arial", 11))
 
         self.product_button = QPushButton("Producto punto a punto")

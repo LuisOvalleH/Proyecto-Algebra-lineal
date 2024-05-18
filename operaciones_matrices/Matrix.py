@@ -10,9 +10,11 @@ class Matrix():
         self.matrix = List()
         self.matrix_sum = None
         self.matrix_subtract = None
-        self.matrix_multiply= None
-        self.matrix_inverse = None
+        self.matrix_multiply = None
+        self.matrix_inverse_result = None
         self.matrix_determinant = None
+        self.matrix_gauss = None
+        self.matrix_rref = None
 
     def insert(self, data: str):
         data = Fraction(data)
@@ -24,8 +26,8 @@ class Matrix():
         result = "Proceso de la suma:\n"
         matrix_result = Matrix(self.rows, self.columns)
 
-        for i in range(self.rows):
-            for j in range(self.columns):
+        for _ in range(self.rows):
+            for _ in range(self.columns):
                 value_1 = self.value()
                 value_2 = Matrix_2.value()
                 sum_value = value_1 + value_2
@@ -39,21 +41,14 @@ class Matrix():
 
         return result
 
-    def get_value(self, row, column):
-        index = row * self.columns + column
-        current_node = self.matrix.head
-        for _ in range(index):
-            current_node = current_node.next
-        return current_node.data
-
     def subtract(self, Matrix_2):
         if self.rows != Matrix_2.rows or self.columns != Matrix_2.columns:
             raise ValueError("Las matrices deben tener las mismas dimensiones para restarse")
         result = "Proceso de la resta:\n"
         matrix_result = Matrix(self.rows, self.columns)
 
-        for i in range(self.rows):
-            for j in range(self.columns):
+        for _ in range(self.rows):
+            for _ in range(self.columns):
                 value_1 = self.value()
                 value_2 = Matrix_2.value()
                 rest_value = value_1 - value_2
@@ -73,79 +68,74 @@ class Matrix():
                 "El número de columnas de la primera matriz debe ser igual al número de filas de la segunda matriz "
                 "para multiplicarlas")
 
-        self.matrix_multiply = Matrix(self.rows, Matrix_2.columns)  # Crear una matriz para almacenar el resultado
-        result_str = "Proceso de multiplicación:\n"
+        result = "Proceso de la multiplicación:\n"
+        matrix_result = Matrix(self.rows, Matrix_2.columns)
 
         for i in range(self.rows):
             for j in range(Matrix_2.columns):
-                result = 0
+                sum_product = Fraction(0)
                 for k in range(self.columns):
-                    result += self.get_value(i, k) * Matrix_2.get_value(k, j)
-                self.matrix_multiply.insert(str(result))  # Insertar el valor en la matriz de resultado
-                result_str += f"({self.get_value(i, 0)} * {Matrix_2.get_value(0, j)}) + "
-                for k in range(1, self.columns):
-                    result_str += f"({self.get_value(i, k)} * {Matrix_2.get_value(k, j)})"
-                    if k < self.columns - 1:
-                        result_str += " + "
-                result_str += f" = {result}\n"
+                    value_1 = self.get_value(i, k)
+                    value_2 = Matrix_2.get_value(k, j)
+                    product = value_1 * value_2
+                    sum_product += product
+                    result += f"{value_1} * {value_2} = {product}\n"
+                matrix_result.insert(str(sum_product))
+                result += f"Suma de productos para posición ({i + 1},{j + 1}) = {sum_product}\n"
 
-        return result_str
+        result += "\nResultado de la multiplicación: \n"
+        result += f"{matrix_result}"
+        self.matrix_multiply = matrix_result
+
+        return result
 
     def inverse_matrix(self):
         if self.rows != self.columns:
-            raise ValueError("Solo las matrices cuadradas pueden tener una inversa")
+            raise ValueError("La matriz debe ser cuadrada para calcular su inversa")
 
-        # Crear una matriz identidad de las mismas dimensiones
-        identity = Matrix(self.rows, self.columns)
-        for i in range(self.rows):
-            for j in range(self.columns):
-                identity.insert(str(1 if i == j else 0))
+        A = [[self.get_value(i, j) for j in range(self.columns)] for i in range(self.rows)]
+        n = self.rows
+        I = [[Fraction(1) if i == j else Fraction(0) for j in range(n)] for i in range(n)]
+        result = "Proceso del cálculo de la inversa:\n"
 
-        # Crear una copia de la matriz original para trabajar en ella
-        augmented = Matrix(self.rows, self.columns * 2)
-        for i in range(self.rows):
-            for j in range(self.columns):
-                augmented.insert(str(self.get_value(i, j)))
-            for j in range(self.columns):
-                augmented.insert(str(identity.get_value(i, j)))
+        for i in range(n):
+            max_el = abs(A[i][i])
+            max_row = i
+            for k in range(i + 1, n):
+                if abs(A[k][i]) > max_el:
+                    max_el = abs(A[k][i])
+                    max_row = k
 
-        # Aplicar eliminación de Gauss-Jordan
-        result_str = "Proceso de encontrar la inversa usando Gauss-Jordan:\n"
+            if i != max_row:
+                A[i], A[max_row] = A[max_row], A[i]
+                I[i], I[max_row] = I[max_row], I[i]
+                result += f"Intercambiar fila {i + 1} con fila {max_row + 1}\n"
 
-        for i in range(self.rows):
-            # Hacer el elemento diagonal 1
-            diag = augmented.get_value(i, i)
-            if diag == 0:
-                raise ValueError("La matriz no es invertible")
-            for j in range(augmented.columns):
-                augmented.set_value(i, j, augmented.get_value(i, j) / diag)
+            diag_element = A[i][i]
+            for j in range(n):
+                A[i][j] /= diag_element
+                I[i][j] /= diag_element
+            result += f"Dividir fila {i + 1} por {diag_element}\n"
 
-            result_str += f"Fila {i} después de dividir por el elemento diagonal {diag}:\n{augmented}\n"
-
-            # Hacer cero los otros elementos en la columna actual
-            for k in range(self.rows):
+            for k in range(n):
                 if k != i:
-                    factor = augmented.get_value(k, i)
-                    for j in range(augmented.columns):
-                        augmented.set_value(k, j, augmented.get_value(k, j) - factor * augmented.get_value(i, j))
+                    factor = A[k][i]
+                    for j in range(n):
+                        A[k][j] -= factor * A[i][j]
+                        I[k][j] -= factor * I[i][j]
+                    result += f"Fila {k + 1} - ({factor}) * Fila {i + 1}\n"
 
-                    result_str += f"Fila {k} después de eliminar el elemento {i} usando el factor {factor}:\n{augmented}\n"
+        self.matrix_inverse_result = Matrix(self.rows, self.columns)
+        for row in I:
+            for value in row:
+                self.matrix_inverse_result.insert(str(value))
 
-        # Extraer la matriz inversa de la parte augmentada
-        self.matrix_inverse = Matrix(self.rows, self.columns)
-        for i in range(self.rows):
-            for j in range(self.columns):
-                self.matrix_inverse.insert(str(augmented.get_value(i, j + self.columns)))
+        result += f"\nInversa de la matriz: \n{self.matrix_inverse_result}\n"
+        return result
 
-        result_str += f"Matriz inversa final:\n{self.matrix_inverse}\n"
-        return result_str
-
-    def set_value(self, row, column, value):
-        index = row * self.columns + column
-        current_node = self.matrix.head
-        for _ in range(index):
-            current_node = current_node.next
-        current_node.data = value
+    def get_value(self, row, col):
+        index = row * self.columns + col
+        return Fraction(self.matrix.find_at(index).data)
 
     def value(self):
         x = self.matrix.shift()
@@ -153,13 +143,77 @@ class Matrix():
         self.insert(x)
         return Fraction(value)
 
-
-
     def determinant(self):
-        pass
+        if self.rows != self.columns:
+            raise ValueError("La matriz debe ser cuadrada para calcular su determinante")
+
+        A = [[self.get_value(i, j) for j in range(self.columns)] for i in range(self.rows)]
+        n = self.rows
+        det = Fraction(1)
+        result = "Proceso del cálculo del determinante:\n"
+
+        for i in range(n):
+
+            max_el = abs(A[i][i])
+            max_row = i
+            for k in range(i + 1, n):
+                if abs(A[k][i]) > max_el:
+                    max_el = abs(A[k][i])
+                    max_row = k
+
+            if i != max_row:
+                A[i], A[max_row] = A[max_row], A[i]
+                det *= -1
+                result += f"Intercambiar fila {i + 1} con fila {max_row + 1}\n"
+
+            for k in range(i + 1, n):
+                if A[i][i] == 0:
+                    continue
+                c = -A[k][i] / A[i][i]
+                for j in range(i, n):
+                    if i == j:
+                        A[k][j] = 0
+                    else:
+                        A[k][j] += c * A[i][j]
+                result += f"Fila {k + 1} - ({-c}) * Fila {i + 1}\n"
+
+
+        for i in range(n):
+            det *= A[i][i]
+
+        self.matrix_gauss = Matrix(self.rows, self.columns)
+        for row in A:
+            for value in row:
+                self.matrix_gauss.insert(str(value))
+
+        self.matrix_determinant = det
+        result += f"\nDeterminante: {det}\n"
+        return result
 
     def range(self):
-        pass
+        A = [[self.get_value(i, j) for j in range(self.columns)] for i in range(self.rows)]
+        n, m = self.rows, self.columns
+        rank = 0
+        result = "Proceso del cálculo del rango:\n"
+
+        for row in range(n):
+            if all(A[row][j] == 0 for j in range(m)):
+                continue
+            rank += 1
+            for i in range(row + 1, n):
+                if A[i][row] != 0:
+                    factor = A[i][row] / A[row][row]
+                    for j in range(m):
+                        A[i][j] -= factor * A[row][j]
+                    result += f"Fila {i + 1} - ({factor}) * Fila {row + 1}\n"
+
+        self.matrix_rref = Matrix(n, m)
+        for row in A:
+            for value in row:
+                self.matrix_rref.insert(str(value))
+
+        result += f"\nRango de la matriz: {rank}\n"
+        return result
 
     def __str__(self):
         result = ""
@@ -176,18 +230,4 @@ class Matrix():
         return result
 
 
-# Ejemplo de uso
-matrix1 = Matrix(2, 2)
-matrix1.insert('1')
-matrix1.insert('3')
-matrix1.insert('4')
-matrix1.insert('5')
 
-matrix2 = Matrix(2, 2)
-matrix2.insert('3')
-matrix2.insert('4')
-matrix2.insert('5')
-matrix2.insert('6')
-
-print(matrix1.sum(matrix2))
-print(matrix1.matrix_sum)

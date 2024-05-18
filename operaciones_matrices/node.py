@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from fractions import Fraction
 from typing import TypeVar, Generic
 
 T = TypeVar('T')
@@ -22,7 +24,7 @@ class Node(Generic[T]):
         self.__next = new_next
 
     def __str__(self):
-        return str(self.__data)
+        return Fraction(self.__data)
 
     def memory_address(self):
         return hex(id(self))

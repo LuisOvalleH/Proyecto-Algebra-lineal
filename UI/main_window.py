@@ -24,7 +24,7 @@ class Main_window(QWidget):
         encabezado_layout = QHBoxLayout()
 
         logo_label = QLabel()
-        pixmap = QPixmap("Calculadora.png").scaled(65, 65)
+        pixmap = QPixmap("calculadora.png").scaled(65, 65)
         logo_label.setPixmap(pixmap)
         encabezado_layout.addWidget(logo_label)
 
