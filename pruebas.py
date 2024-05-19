@@ -8,6 +8,8 @@ class Op_matrices_window(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.result = None
+        self.matrix_result = None
         self.setWindowTitle("Selección de proporción")
         self.setGeometry(550, 210, 450, 400)
 
@@ -206,13 +208,6 @@ class Op_matrices_window(QWidget):
         columns_2 = int(self.input_columns_2.text())
         matrix_2_text = self.get_matrix_input_text(rows_2, columns_2, "input_row_2")
 
-        # Aquí puedes realizar la suma de las matrices
-        print("Matriz 1:")
-        for row in matrix_1_text:
-            print(row)
-        print("Matriz 2:")
-        for row in matrix_2_text:
-            print(row)
 
         # Suponiendo que ambas matrices tienen las mismas dimensiones
         result_matrix = []

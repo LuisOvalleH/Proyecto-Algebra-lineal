@@ -34,9 +34,6 @@ class Matrix():
                 result += f"{value_1} + {value_2} = {sum_value}\n"
                 matrix_result.insert(sum_value)
 
-        result += "\nResultado de la suma: "
-
-        result += f"\n {matrix_result} "
         self.matrix_sum = matrix_result
 
         return result
@@ -55,10 +52,8 @@ class Matrix():
                 result += f"{value_1} - {value_2} = {rest_value}\n"
                 matrix_result.insert(rest_value)
 
-        result += "\nResultado de la resta: "
 
-        result += f"\n {matrix_result} "
-        self.matrix_sum = matrix_result
+        self.matrix_subtract = matrix_result
 
         return result
 
@@ -83,8 +78,6 @@ class Matrix():
                 matrix_result.insert(str(sum_product))
                 result += f"Suma de productos para posición ({i + 1},{j + 1}) = {sum_product}\n"
 
-        result += "\nResultado de la multiplicación: \n"
-        result += f"{matrix_result}"
         self.matrix_multiply = matrix_result
 
         return result
