@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+
 class MplCanvas(FigureCanvas):
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -24,11 +25,12 @@ class MplCanvas(FigureCanvas):
         self.axes.set_yticks(range(-15, 16, 1))
         self.axes.grid(True)
 
+
 class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        self.setGeometry(185,100,1150,650)
+        self.setGeometry(185, 100, 1150, 650)
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.setCentralWidget(self.canvas)
 
@@ -39,7 +41,7 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+
 app = QApplication(sys.argv)
 main = MainWindow()
 sys.exit(app.exec())
-

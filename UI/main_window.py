@@ -4,6 +4,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from op_matrices_window import Op_matrices_window
+from matriz_reverse import Matrix_reverse_window
 
 #limitar creacion a 6*6
 
@@ -53,6 +54,12 @@ class Main_window(QWidget):
         self.op_matrices_window.show()
         self.op_matrices_window.window_closed.connect(self.reopen_main_menu)
 
+    def matrix_reverse_funcion(self):
+        self.hide()
+        self.matrix_reverse_window = Matrix_reverse_window()
+        self.matrix_reverse_window.show()
+        self.matrix_reverse_window.window_closed.connect(self.reopen_main_menu)
+
     def button_main(self, main_layout):
         button_layout = QVBoxLayout()
 
@@ -67,6 +74,7 @@ class Main_window(QWidget):
         self.matriz_inversa.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.matriz_inversa.setFont(QFont("Arial", 11))
+        self.matriz_inversa.clicked.connect(self.matrix_reverse_funcion)
         button_layout.addWidget(self.matriz_inversa)
 
         self.matriz_determinante = QPushButton("Determinante de una Matriz")
