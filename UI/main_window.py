@@ -5,6 +5,8 @@ from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from op_matrices_window import Op_matrices_window
 from matriz_reverse import Matrix_reverse_window
+from determinant_window import  Matrix_determinat_window
+from range_window import Matrix_range_window
 
 #limitar creacion a 6*6
 
@@ -60,6 +62,19 @@ class Main_window(QWidget):
         self.matrix_reverse_window.show()
         self.matrix_reverse_window.window_closed.connect(self.reopen_main_menu)
 
+    def matrix_determinat_fuction(self):
+        self.hide()
+        self.matrix_determinant_window = Matrix_determinat_window()
+        self.matrix_determinant_window.show()
+        self.matrix_determinant_window.window_closed.connect(self.reopen_main_menu)
+
+    def matrix_range_fuction(self):
+        self.hide()
+        self.matrix_range_window = Matrix_range_window()
+        self.matrix_range_window.show()
+        self.matrix_range_window.window_closed.connect(self.reopen_main_menu)
+
+
     def button_main(self, main_layout):
         button_layout = QVBoxLayout()
 
@@ -81,12 +96,14 @@ class Main_window(QWidget):
         self.matriz_determinante.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.matriz_determinante.setFont(QFont("Arial", 11))
+        self.matriz_determinante.clicked.connect(self.matrix_determinat_fuction)
         button_layout.addWidget(self.matriz_determinante)
 
         self.matriz_rango = QPushButton("Rango de una Matriz")
         self.matriz_rango.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.matriz_rango.setFont(QFont("Arial", 11))
+        self.matriz_rango.clicked.connect(self.matrix_range_fuction)
         button_layout.addWidget(self.matriz_rango)
 
         self.matriz_cifrado = QPushButton("Cifrado por Matrices")
