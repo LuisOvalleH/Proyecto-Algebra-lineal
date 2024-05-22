@@ -24,7 +24,7 @@ class Node(Generic[T]):
         self.__next = new_next
 
     def __str__(self):
-        return Fraction(self.__data)
+        return self.__data
 
     def memory_address(self):
         return hex(id(self))

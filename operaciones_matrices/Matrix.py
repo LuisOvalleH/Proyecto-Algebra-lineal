@@ -15,6 +15,7 @@ class Matrix():
         self.matrix_determinant = None
         self.matrix_gauss = None
         self.matrix_rref = None
+        self.matrix_transpose = None
 
     def insert(self, data: str):
         data = Fraction(data)
@@ -207,6 +208,20 @@ class Matrix():
 
         result += f"\nRango de la matriz: {rank}\n"
         return result
+
+    def transpose(self):
+        # Crear una nueva matriz con filas y columnas intercambiadas
+        transposed_matrix = Matrix(self.columns, self.rows)
+
+        for i in range(self.rows):
+            for j in range(self.columns):
+                value = self.get_value(i, j)
+                # Insertar el valor en la nueva posición transpuesta
+                transposed_matrix.insert(str(value))
+
+        transposed_matrix = self.matrix_transpose
+
+        return transposed_matrix
 
     def __str__(self):
         result = ""

@@ -7,6 +7,7 @@ from op_matrices_window import Op_matrices_window
 from matriz_reverse import Matrix_reverse_window
 from determinant_window import  Matrix_determinat_window
 from range_window import Matrix_range_window
+from matrix_encryption_window import Matrix_encryption_window
 
 #limitar creacion a 6*6
 
@@ -74,6 +75,12 @@ class Main_window(QWidget):
         self.matrix_range_window.show()
         self.matrix_range_window.window_closed.connect(self.reopen_main_menu)
 
+    def matrix_encryption_fuction(self):
+        self.hide()
+        self.matrix_encryption_window = Matrix_encryption_window()
+        self.matrix_encryption_window.show()
+        self.matrix_encryption_window.window_closed.connect(self.reopen_main_menu)
+
 
     def button_main(self, main_layout):
         button_layout = QVBoxLayout()
@@ -110,6 +117,7 @@ class Main_window(QWidget):
         self.matriz_cifrado.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.matriz_cifrado.setFont(QFont("Arial", 11))
+        self.matriz_cifrado.clicked.connect(self.matrix_encryption_fuction)
         button_layout.addWidget(self.matriz_cifrado)
 
         self.matriz_markov = QPushButton("Cadena De Markov")
@@ -126,8 +134,6 @@ class Main_window(QWidget):
 
 
         main_layout.addLayout(button_layout)
-
-
 
 
 if __name__ == "__main__":
