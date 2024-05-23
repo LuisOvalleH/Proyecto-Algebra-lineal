@@ -167,9 +167,12 @@ class Vectores_window(QWidget):
         y = y_1 + y_2
         self.y = y
         magnitude = math.sqrt(x ** 2 + y ** 2)
+        angle_radians = math.atan2(y, x)
+        angle_degrees = math.degrees(angle_radians)
 
         result += f"Vector: ({x},{y})\n"
-        result += f"Magnitud: {magnitude}"
+        result += f"Magnitud: {magnitude}\n"
+        result += f"Angulo: {angle_degrees}"
 
         self.result = result
         self.create_result_area()
