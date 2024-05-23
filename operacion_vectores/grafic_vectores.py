@@ -26,22 +26,19 @@ class MplCanvas(FigureCanvas):
         self.axes.grid(True)
 
 
-class MainWindow(QMainWindow):
+class Vectores_grafic(QMainWindow):
 
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+    def __init__(self,x ,y ,*args, **kwargs):
+        super(Vectores_grafic, self).__init__(*args, **kwargs)
         self.setGeometry(185, 100, 1150, 650)
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.setCentralWidget(self.canvas)
 
         # Aquí defines tus vectores (x, y)
 
-        self.canvas.plot_vector(-6, 5)
-        self.canvas.plot_vector(-8, 10)
+        self.canvas.plot_vector(x, y)
 
         self.show()
 
 
-app = QApplication(sys.argv)
-main = MainWindow()
-sys.exit(app.exec())
+

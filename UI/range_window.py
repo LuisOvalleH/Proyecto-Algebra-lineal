@@ -3,7 +3,7 @@ from operaciones_matrices.Matrix import Matrix
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, \
-    QScrollArea, QComboBox
+    QScrollArea, QComboBox, QMessageBox
 
 
 class Matrix_range_window(QWidget):
@@ -58,7 +58,7 @@ class Matrix_range_window(QWidget):
         self.matrix_1_text.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         matrix_1.addWidget(self.matrix_1_text)
 
-        self.rows_label = QLabel("Ingresar numero de filas y columnas:")
+        self.rows_label = QLabel("Ingresar numero de filas:")
         self.rows_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         rows_layout_1.addWidget(self.rows_label)
 
@@ -67,6 +67,14 @@ class Matrix_range_window(QWidget):
         self.input_rows_1 = QComboBox()
         self.input_rows_1.addItems(options)
         rows_layout_1.addWidget(self.input_rows_1)
+
+        self.columns_label = QLabel("Ingresar numero de Columnas:")
+        self.columns_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        columns_layout_1.addWidget(self.columns_label)
+
+        self.input_columns_1 = QComboBox()
+        self.input_columns_1.addItems(options)
+        columns_layout_1.addWidget(self.input_columns_1)
 
         self.confirm_button = QPushButton("Confirmar")
         self.confirm_button.setStyleSheet(
@@ -91,9 +99,9 @@ class Matrix_range_window(QWidget):
     def create_matrix_input_1(self, layout: QVBoxLayout):
         matrix_layout = QVBoxLayout()
         rows = int(self.input_rows_1.currentText())
-        columns = int(self.input_rows_1.currentText())
+        columns = int(self.input_columns_1.currentText())
         self.rows_1 = int(self.input_rows_1.currentText())
-        self.columns_1 = int(self.input_rows_1.currentText())
+        self.columns_1 = int(self.input_columns_1.currentText())
         self.matrix_1_ = QLabel("Matriz 1: ")
         self.matrix_1_.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         matrix_layout.addWidget(self.matrix_1_)
@@ -115,23 +123,42 @@ class Matrix_range_window(QWidget):
     def calculate_reverse(self):
         prefix_1 = "input_row_1"
         matrix = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
+        if matrix is False:
+            return
         self.result = matrix.range()
         self.matrix_result = matrix.matrix_rref
         self.create_result_area()
+
+    def is_number(self, s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
     def get_matrix_input_text(self, rows, columns, prefix):
         matrix = Matrix(rows, columns)
         for row_index in range(rows):
             for column_index in range(columns):
                 input_row = getattr(self, f"{prefix}_{row_index}_{column_index}")
-                matrix.matrix.append(input_row.text())
+                input_text = input_row.text()
+                if self.is_number(input_text):
+                    matrix.matrix.append(float(input_text))
+                else:
+                    QMessageBox.warning(self, "Error de validación",
+                                        f"Unicamente se pueden ingresar datos numericos.")
+                    return False
+
         return matrix
 
     def delete_create_matrix_button(self):
         self.matrix_1_text.deleteLater()
         self.rows_label.deleteLater()
         self.input_rows_1.deleteLater()
+        self.columns_label.deleteLater()
+        self.input_columns_1.deleteLater()
         self.confirm_button.deleteLater()
+
 
     def init_op_sistem(self, layout: QVBoxLayout):
 
@@ -149,7 +176,7 @@ class Matrix_range_window(QWidget):
         self.scroll_area.setWidgetResizable(True)
         layout.addWidget(self.scroll_area)
 
-        self.reverse_button = QPushButton("Calcular Determinante")
+        self.reverse_button = QPushButton("Calcular Rango")
         self.reverse_button.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.reverse_button.clicked.connect(self.calculate_reverse)

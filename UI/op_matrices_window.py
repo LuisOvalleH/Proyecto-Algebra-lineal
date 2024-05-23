@@ -3,7 +3,7 @@ from operaciones_matrices.Matrix import Matrix
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, \
-    QScrollArea, QComboBox
+    QScrollArea, QComboBox, QMessageBox
 
 
 class Op_matrices_window(QWidget):
@@ -166,28 +166,53 @@ class Op_matrices_window(QWidget):
         layout.addLayout(matrix_layout)
 
     def sum_button_action(self):
+        if (self.columns_1 != self.columns_2) or (self.rows_1 != self.rows_2):
+            QMessageBox.warning(self, "Error de validación",
+                                f"Las columnas y filas no coinciden.")
+            return
         prefix_1 = "input_row_1"
         prefix_2 = "input_row_2"
         matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
         matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
+        if matrix_1 is False:
+            return
+        if matrix_2 is False:
+            return
         self.result = matrix_1.sum(matrix_2)
         self.matrix_result = matrix_1.matrix_sum
         self.create_result_area()
 
     def subtraction_button_action(self):
+        if (self.columns_1 != self.columns_2) or (self.rows_1 != self.rows_2):
+            QMessageBox.warning(self, "Error de validación",
+                                f"Las columnas y filas no coinciden.")
+            return
         prefix_1 = "input_row_1"
         prefix_2 = "input_row_2"
         matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
         matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
+        if matrix_1 is False:
+            return
+        if matrix_2 is False:
+            return
         self.result = matrix_1.subtract(matrix_2)
         self.matrix_result = matrix_1.matrix_subtract
         self.create_result_area()
 
     def multiply_button_action(self):
+        if (self.columns_1 != self.rows_2) or (self.columns_2 != self.rows_1):
+            QMessageBox.warning(self, "Error de validación",
+                                f"Matriz no operable por sus dimensiones.")
+            return
+
         prefix_1 = "input_row_1"
         prefix_2 = "input_row_2"
         matrix_1 = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
         matrix_2 = self.get_matrix_input_text(self.rows_2, self.columns_2, prefix_2)
+        if matrix_1 is False:
+            return
+        if matrix_2 is False:
+            return
         self.result = matrix_1.multiply(matrix_2)
         self.matrix_result = matrix_1.matrix_multiply
         self.create_result_area()
@@ -197,8 +222,22 @@ class Op_matrices_window(QWidget):
         for row_index in range(rows):
             for column_index in range(columns):
                 input_row = getattr(self, f"{prefix}_{row_index}_{column_index}")
-                matrix.matrix.append(input_row.text())
+                input_text = input_row.text()
+                if self.is_number(input_text):
+                    matrix.matrix.append(float(input_text))
+                else:
+                    QMessageBox.warning(self, "Error de validación",
+                                        f"Unicamente se pueden ingresar datos numericos.")
+                    return False
+
         return matrix
+
+    def is_number(self, s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
     def delete_create_matrix_button(self):
         self.matrix_1_text.deleteLater()

@@ -184,6 +184,8 @@ class Matrix():
         result += f"\nDeterminante: {det}\n"
         return result
 
+
+
     def range(self):
         A = [[self.get_value(i, j) for j in range(self.columns)] for i in range(self.rows)]
         n, m = self.rows, self.columns

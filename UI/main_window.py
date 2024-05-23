@@ -8,6 +8,8 @@ from matriz_reverse import Matrix_reverse_window
 from determinant_window import  Matrix_determinat_window
 from range_window import Matrix_range_window
 from matrix_encryption_window import Matrix_encryption_window
+from markov_window import Matrix_markov_window
+from vectores_window import Vectores_window
 
 #limitar creacion a 6*6
 
@@ -81,6 +83,19 @@ class Main_window(QWidget):
         self.matrix_encryption_window.show()
         self.matrix_encryption_window.window_closed.connect(self.reopen_main_menu)
 
+    def matrix_markov_window(self):
+        self.hide()
+        self.matrix_window_markov = Matrix_markov_window()
+        self.matrix_window_markov.show()
+        self.matrix_window_markov.window_closed.connect(self.reopen_main_menu)
+
+    def vectores_window(self):
+        self.hide()
+        self.vectores_window = Vectores_window()
+        self.vectores_window.show()
+        self.vectores_window.window_closed.connect(self.reopen_main_menu)
+
+
 
     def button_main(self, main_layout):
         button_layout = QVBoxLayout()
@@ -124,12 +139,14 @@ class Main_window(QWidget):
         self.matriz_markov.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.matriz_markov.setFont(QFont("Arial", 11))
+        self.matriz_markov.clicked.connect(self.matrix_markov_window)
         button_layout.addWidget(self.matriz_markov)
 
         self.op_vectores = QPushButton("Operaciones con vectores")
         self.op_vectores.setStyleSheet(
             "height: 30px; background-color: #a9e159; color: white; border: 2x solid black; border-radius: 13px;")
         self.op_vectores.setFont(QFont("Arial", 11))
+        self.op_vectores.clicked.connect(self.vectores_window)
         button_layout.addWidget(self.op_vectores)
 
 

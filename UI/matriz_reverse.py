@@ -3,7 +3,7 @@ from operaciones_matrices.Matrix import Matrix
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, \
-    QScrollArea, QComboBox
+    QScrollArea, QComboBox, QMessageBox
 
 
 class Matrix_reverse_window(QWidget):
@@ -115,6 +115,13 @@ class Matrix_reverse_window(QWidget):
     def calculate_reverse(self):
         prefix_1 = "input_row_1"
         matrix = self.get_matrix_input_text(self.rows_1, self.columns_1, prefix_1)
+        if matrix is False:
+            return
+        matrix.determinant()
+        if matrix.matrix_determinant == 0:
+            QMessageBox.warning(self, "Error de Determinante",
+                                f"La determinante es 0 la matriz no tiene inversa.")
+            return
         self.result = matrix.inverse_matrix()
         self.matrix_result = matrix.matrix_inverse_result
         self.create_result_area()
@@ -124,8 +131,21 @@ class Matrix_reverse_window(QWidget):
         for row_index in range(rows):
             for column_index in range(columns):
                 input_row = getattr(self, f"{prefix}_{row_index}_{column_index}")
-                matrix.matrix.append(input_row.text())
+                input_text = input_row.text()
+                if self.is_number(input_text):
+                    matrix.matrix.append(float(input_text))
+                else:
+                    QMessageBox.warning(self, "Error de validación",
+                                        f"Unicamente se pueden ingresar datos numericos.")
+                    return False
+
         return matrix
+    def is_number(self, s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
     def delete_create_matrix_button(self):
         self.matrix_1_text.deleteLater()

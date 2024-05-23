@@ -1,14 +1,15 @@
 import sys
 import numpy as np
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QScrollArea, QMessageBox
+from operaciones_matrices.Matrix import Matrix
 
-# Global lists to hold text conversion and key matrix
+
 lista = []
 key = []
 
-# Letter to number mappings
+
 mapping = {
     'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8,
     'i': 9, 'j': 10, 'k': 11, 'l': 12, 'm': 13, 'n': 14, 'ñ': 15,
@@ -22,9 +23,9 @@ mapping = {
     '>': 63, '=': 64, '_': 65, '^': 66, '`': 67, '~': 68
 }
 
-def encrypt(texto):
+def encrypt(text):
     lista.clear()
-    for letra in texto:
+    for letra in text:
         lista.append(mapping.get(letra.lower(), 'Opción Incorrecta!'))
     size()
 
@@ -32,7 +33,7 @@ def size():
     while len(lista) % 3 != 0:
         lista.append(28)
 
-def matriz_inversa(matriz):
+def matriz_reversed(matriz):
     try:
         inversa = np.linalg.inv(matriz)
         return inversa
@@ -71,14 +72,17 @@ class Matrix_encryption_window(QWidget):
         encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
+        encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(title_label)
+        encabezado_layout.addWidget(aux_label)
+        encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
         encabezado_layout.addWidget(aux_label)
 
         main_layout.addLayout(encabezado_layout)
 
-        string_label = QLabel("Ingrese el mensaje a encriptar (sin caracteres especiales):")
+        string_label = QLabel("Ingrese el mensaje a encriptar:")
         string_label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         layout.addWidget(string_label)
 
@@ -156,7 +160,7 @@ class Matrix_encryption_window(QWidget):
         matrix_cifrada = np.dot(key_np, matrix)
         result += f'Matriz cifrada:\n{matrix_cifrada}\n\n'
 
-        matrix_reversed_np = matriz_inversa(key_np)
+        matrix_reversed_np = matriz_reversed(key_np)
         if matrix_reversed_np is None:
             result += "La matriz de llave no es invertible.\n"
             self.result = result
@@ -227,6 +231,18 @@ class Matrix_encryption_window(QWidget):
         main_layout.addLayout(matrix_layout)
 
         self.setLayout(main_layout)
+
+    def get_matrix_input_text(self, rows, columns, prefix):
+        matrix = Matrix(rows, columns)
+        for row_index in range(rows):
+            for column_index in range(columns):
+                input_row = getattr(self, f"{prefix}_{row_index}_{column_index}")
+                matrix.matrix.append(input_row.text())
+        return matrix
+
+    def closeEvent(self, event):
+        self.window_closed.emit()
+        super().closeEvent(event)
 
 
 if __name__ == "__main__":
